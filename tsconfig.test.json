@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "nodenext",   // understands package.json#exports
+    "types": ["jest", "jest-environment-jsdom"]
+  },
+  "include": ["src/**/*.test.ts"]
+}
