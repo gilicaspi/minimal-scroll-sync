@@ -1,6 +1,6 @@
 {
   "name": "minimal-scroll-sync",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tiny React scroll-sync hooks & emitter",
   "scripts": {
     "build": "tsup src/index.ts --dts --format esm,cjs",
