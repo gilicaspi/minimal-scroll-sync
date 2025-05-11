@@ -1,6 +1,6 @@
 {
   "name": "minimal-scroll-sync",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tiny React scroll-sync hooks & emitter",
   "scripts": {
     "build": "tsup src/index.ts --dts --format esm,cjs",
@@ -19,7 +19,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gilicaspi/scroll-sync.git"
+    "url": "git+https://github.com/gilicaspi/minimal-scroll-sync.git"
   },
   "keywords": [
     "react",

@@ -1,7 +1,7 @@
-# gilicaspi/scroll-sync
+# Minimal Scroll Sync
 
-[![CI](https://github.com/gilicaspi/scroll-sync/actions/workflows/ci.yml/badge.svg)](https://github.com/gilicaspi/scroll-sync/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/gilicaspi/scroll-sync/branch/main/graph/badge.svg)](https://codecov.io/gh/gilicaspi/scroll-sync)
+[![CI](https://github.com/gilicaspi/minimal-scroll-sync/actions/workflows/ci.yml/badge.svg)](https://github.com/gilicaspi/minimal-scroll-sync/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/gilicaspi/minimal-scroll-sync/branch/main/graph/badge.svg)](https://codecov.io/gh/gilicaspi/minimal-scroll-sync)
 
 A **lightweight, dependency‑free** emitter + set of React hooks that keep any number of horizontally scrollable elements in synchonized with minimal lag. Ideal for virtualized timelines, kanban boards, Gantt charts, parallax backgrounds, or anything that needs *follow‑the‑leader* scrolling.
 
@@ -25,9 +25,9 @@ A **lightweight, dependency‑free** emitter + set of React hooks that keep any 
 ## 🚀 Installation
 
 ```bash
-npm i gilicaspi/scroll-sync
+npm i minimal-scroll-sync
 # or
-pnpm add gilicaspi/scroll-sync
+pnpm add minimal-scroll-sync
 ```
 
 The package ships **ESM, CJS, and type declarations**—whatever your bundler prefers.
@@ -38,7 +38,7 @@ The package ships **ESM, CJS, and type declarations**—whatever your bundler pr
 
 ```tsx
 import React, { useRef } from "react";
-import { useScrollSync } from "gilicaspi/scroll-sync";
+import { useScrollSync } from "minimal-scroll-sync";
 
 export default function TwinPanes() {
   const leaderRef = useRef<HTMLDivElement>(null);
@@ -146,7 +146,7 @@ CI (GitHub Actions) runs the same commands and uploads coverage to Codecov—bad
 
 Issues and PRs are welcome!  If you spot a race‑condition edge case, open an issue with a repro or failing test and we’ll squash it together.
 
-1. `git clone https://github.com/gilicaspi/scroll-sync`
+1. `git clone https://github.com/gilicaspi/minimal-scroll-sync`
 2. `pnpm install` (or npm / yarn)
 3. Create a branch, add tests (`npm run test`), open PR.
 
