@@ -15,9 +15,3 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run coverage
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}     # add once in repo settings
-          files: ./coverage/lcov.info

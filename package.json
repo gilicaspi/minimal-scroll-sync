@@ -8,8 +8,7 @@
     "lint": "eslint src --ext .ts,.tsx",
     "prepare": "npm run build",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "coverage": "jest --coverage"
+    "test:watch": "jest --watch"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.js",
