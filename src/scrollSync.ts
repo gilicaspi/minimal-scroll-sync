@@ -1,8 +1,18 @@
 import { useEffect } from 'react';
 
 const SCROLL_END_DELAY_MILLIS = 25;
+export const QUALIFIED_NAME = 'data-minimal-scroll-sync-id';
 
 type ScrollCallback = (offset: number) => void;
+
+const getMinimalScrollSyncElementId = (el: Element) => el.id || el.getAttribute(QUALIFIED_NAME);
+
+const setMinimalScrollSyncElementId = (el: Element) => {
+  const newId = crypto.randomUUID();
+  el.setAttribute(QUALIFIED_NAME, newId);
+  return newId;
+};
+
 export const scrollSyncEmitter = (() => {
   // Keep track of the currently scrolling element
   // This takes advantage of JS being single-threaded, so we can just assume that the interacted element will win
@@ -21,10 +31,16 @@ export const scrollSyncEmitter = (() => {
     },
     // Store a callback for each element
     subscribeScroll(el: Element, cb: ScrollCallback) {
-      scrollSubs[el.id] = cb;
-      return () => delete scrollSubs[el.id];
+      let id = getMinimalScrollSyncElementId(el);
+      if (!id) id = setMinimalScrollSyncElementId(el);
+
+      scrollSubs[id] = cb;
+      return () => delete scrollSubs[id];
     },
     publish(el: Element) {
+      let id = getMinimalScrollSyncElementId(el);
+      if (!id) id = setMinimalScrollSyncElementId(el);
+
       if (currentElement && el !== currentElement) return;
 
       if (!currentElement) currentElement = el;
@@ -33,7 +49,7 @@ export const scrollSyncEmitter = (() => {
 
       requestAnimationFrame(() => {
         for (const [id, cb] of Object.entries(scrollSubs)) {
-          if (currentElement && id === currentElement.id) continue;
+          if (currentElement && id === getMinimalScrollSyncElementId(currentElement)) continue;
 
           if (currentElement?.scrollLeft) cb(currentElement.scrollLeft);
         }
@@ -43,10 +59,16 @@ export const scrollSyncEmitter = (() => {
     // Scroll end needs to be a different event, since the callback will be mounting and unmounting the effect as the
     // virtualized list scrolls
     subscribeScrollEnd(el: Element, cb: ScrollCallback) {
-      scrollEndSubs[el.id] = cb;
-      return () => delete scrollEndSubs[el.id];
+      let id = getMinimalScrollSyncElementId(el);
+      if (!id) id = setMinimalScrollSyncElementId(el);
+
+      scrollEndSubs[id] = cb;
+      return () => delete scrollEndSubs[id];
     },
     publishScrollEnd(el: Element) {
+      let id = getMinimalScrollSyncElementId(el);
+      if (!id) id = setMinimalScrollSyncElementId(el);
+
       if (currentElement && el !== currentElement) return;
 
       if (!currentElement) currentElement = el;
@@ -56,14 +78,14 @@ export const scrollSyncEmitter = (() => {
       requestAnimationFrame(() => {
         // First just set the offsets
         for (const [id, cb] of Object.entries(scrollSubs)) {
-          if (currentElement && id === currentElement.id) continue;
+          if (currentElement && id === getMinimalScrollSyncElementId(currentElement)) continue;
 
           if (currentElement?.scrollLeft) cb(currentElement.scrollLeft);
         }
 
         // Then only call the scrollEnd callback for the scrolling element
         for (const [id, cb] of Object.entries(scrollEndSubs)) {
-          if (currentElement && id === currentElement.id) cb(currentElement.scrollLeft);
+          if (currentElement && id === getMinimalScrollSyncElementId(currentElement)) cb(currentElement.scrollLeft);
         }
 
         // Clear the current element, but wait a slight delay to let some of the dispatches to work through

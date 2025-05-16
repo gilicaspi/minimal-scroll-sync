@@ -20,6 +20,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var index_exports = {};
 __export(index_exports, {
+  QUALIFIED_NAME: () => QUALIFIED_NAME,
   scrollSyncEmitter: () => scrollSyncEmitter,
   useScrollEndSubscribe: () => useScrollEndSubscribe,
   useScrollSync: () => useScrollSync,
@@ -30,6 +31,13 @@ module.exports = __toCommonJS(index_exports);
 // src/scrollSync.ts
 var import_react = require("react");
 var SCROLL_END_DELAY_MILLIS = 25;
+var QUALIFIED_NAME = "data-minimal-scroll-sync-id";
+var getMinimalScrollSyncElementId = (el) => el.id || el.getAttribute(QUALIFIED_NAME);
+var setMinimalScrollSyncElementId = (el) => {
+  const newId = crypto.randomUUID();
+  el.setAttribute(QUALIFIED_NAME, newId);
+  return newId;
+};
 var scrollSyncEmitter = /* @__PURE__ */ (() => {
   let currentElement;
   const scrollSubs = {};
@@ -41,16 +49,20 @@ var scrollSyncEmitter = /* @__PURE__ */ (() => {
     },
     // Store a callback for each element
     subscribeScroll(el, cb) {
-      scrollSubs[el.id] = cb;
-      return () => delete scrollSubs[el.id];
+      let id = getMinimalScrollSyncElementId(el);
+      if (!id) id = setMinimalScrollSyncElementId(el);
+      scrollSubs[id] = cb;
+      return () => delete scrollSubs[id];
     },
     publish(el) {
+      let id = getMinimalScrollSyncElementId(el);
+      if (!id) id = setMinimalScrollSyncElementId(el);
       if (currentElement && el !== currentElement) return;
       if (!currentElement) currentElement = el;
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       requestAnimationFrame(() => {
-        for (const [id, cb] of Object.entries(scrollSubs)) {
-          if (currentElement && id === currentElement.id) continue;
+        for (const [id2, cb] of Object.entries(scrollSubs)) {
+          if (currentElement && id2 === getMinimalScrollSyncElementId(currentElement)) continue;
           if (currentElement == null ? void 0 : currentElement.scrollLeft) cb(currentElement.scrollLeft);
         }
       });
@@ -58,20 +70,24 @@ var scrollSyncEmitter = /* @__PURE__ */ (() => {
     // Scroll end needs to be a different event, since the callback will be mounting and unmounting the effect as the
     // virtualized list scrolls
     subscribeScrollEnd(el, cb) {
-      scrollEndSubs[el.id] = cb;
-      return () => delete scrollEndSubs[el.id];
+      let id = getMinimalScrollSyncElementId(el);
+      if (!id) id = setMinimalScrollSyncElementId(el);
+      scrollEndSubs[id] = cb;
+      return () => delete scrollEndSubs[id];
     },
     publishScrollEnd(el) {
+      let id = getMinimalScrollSyncElementId(el);
+      if (!id) id = setMinimalScrollSyncElementId(el);
       if (currentElement && el !== currentElement) return;
       if (!currentElement) currentElement = el;
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       requestAnimationFrame(() => {
-        for (const [id, cb] of Object.entries(scrollSubs)) {
-          if (currentElement && id === currentElement.id) continue;
+        for (const [id2, cb] of Object.entries(scrollSubs)) {
+          if (currentElement && id2 === getMinimalScrollSyncElementId(currentElement)) continue;
           if (currentElement == null ? void 0 : currentElement.scrollLeft) cb(currentElement.scrollLeft);
         }
-        for (const [id, cb] of Object.entries(scrollEndSubs)) {
-          if (currentElement && id === currentElement.id) cb(currentElement.scrollLeft);
+        for (const [id2, cb] of Object.entries(scrollEndSubs)) {
+          if (currentElement && id2 === getMinimalScrollSyncElementId(currentElement)) cb(currentElement.scrollLeft);
         }
         setTimeout(() => currentElement = null, SCROLL_END_DELAY_MILLIS);
       });
@@ -116,6 +132,7 @@ var useScrollEndSubscribe = (ref, scrollEndCallback) => {
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  QUALIFIED_NAME,
   scrollSyncEmitter,
   useScrollEndSubscribe,
   useScrollSync,

@@ -1,7 +1,10 @@
 # Minimal Scroll Sync
 
 [![CI](https://github.com/gilicaspi/minimal-scroll-sync/actions/workflows/ci.yml/badge.svg)](https://github.com/gilicaspi/minimal-scroll-sync/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/minimal-scroll-sync.svg)](https://www.npmjs.com/package/minimal-scroll-sync) <br>[![bundlephobia](https://img.shields.io/bundlephobia/minzip/minimal-scroll-sync)](https://bundlephobia.com/package/minimal-scroll-sync)
+[![npm](https://img.shields.io/npm/v/minimal-scroll-sync.svg)](https://www.npmjs.com/package/minimal-scroll-sync)
+[![bundlephobia](https://img.shields.io/bundlephobia/minzip/minimal-scroll-sync)](https://bundlephobia.com/package/minimal-scroll-sync)
+
+![Demo of three panes scrolling in sync, along with a single parallax view](./media/demo.gif)
 
 A **lightweight, dependency‑free** emitter + set of React hooks that keep any number of horizontally scrollable elements synchronized with minimal lag. Ideal for virtualized timelines, kanban boards, Gantt charts, parallax backgrounds, or anything that needs *follow‑the‑leader* scrolling.
 
@@ -15,14 +18,14 @@ A **lightweight, dependency‑free** emitter + set of React hooks that keep any 
 
 ## ✨ Features
 
-| Feature                            | Details                                                                            |
-| ---------------------------------- |------------------------------------------------------------------------------------|
-| ⚡ **Ultra‑light**                  | Zero runtime deps. Just **~836B** minified + gzipped.                              |
-| 🪝 **Hooks first**                 | `useScrollSync`, `useScrollSyncSubscribe`, `useScrollEndSubscribe` for React apps. |
-| 🪢 **Pure emitter**                | Non‑React projects can import `scrollSyncEmitter` directly.                        |
-| 🧠 **Smart *lead / follow* logic** | Only the actively‑scrolled element publishes; everyone else follows.               |
-| 🏎️ **RAF‑based**                  | Updates happen in `requestAnimationFrame`, avoiding recursive scroll events.       |
-| 🛑 **Scroll‑end callback**         | Fire one final callback when scroll ends (for React state, analytics, etc.).       |
+| Feature                            | Details                                                                                                                                                                               |
+| ---------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ⚡ **Ultra‑light**                  | Zero runtime deps. Just ![minzipped size](https://img.shields.io/bundlephobia/minzip/minimal-scroll-sync?style=flat-square&label=%20&labelColor=none&color=white) minified + gzipped. |
+| 🪝 **Hooks first**                 | `useScrollSync`, `useScrollSyncSubscribe`, `useScrollEndSubscribe` for React apps.                                                                                                    |
+| 🪢 **Pure emitter**                | Non‑React projects can import `scrollSyncEmitter` directly.                                                                                                                           |
+| 🧠 **Smart *lead / follow* logic** | Only the actively‑scrolled element publishes; everyone else follows.                                                                                                                  |
+| 🏎️ **RAF‑based**                   | Updates happen in `requestAnimationFrame`, avoiding recursive scroll events.                                                                                                          |
+| 🛑 **Scroll‑end callback**         | Fire one final callback when scroll ends (for React state, analytics, etc.).                                                                                                          |
 
 ---
 
@@ -42,7 +45,7 @@ The package ships **ESM, CJS, and type declarations**—whatever your bundler pr
 
 ```tsx
 import React, { useRef } from "react";
-import { useScrollSync } from "minimal-scroll-sync";
+import { useScrollSync, useScrollEndSubscribe } from "minimal-scroll-sync";
 
 export default function ScrollSyncDemo() {
   const leaderRef = useRef<HTMLDivElement>(null);
@@ -52,7 +55,7 @@ export default function ScrollSyncDemo() {
   // Leader both publishes & follows (edge‑case safety)
   useScrollSync(leaderRef);
   // Leader also dispatches scroll end events out to state management
-  useScrollEndSubscribe(leaderRef, offset => dispatch(setLeaderScrolledTo(columns[column].date)));
+  useScrollEndSubscribe(leaderRef, offset => dispatch(setLeaderScrolledTo(offset)));
 
   // Leader 2 both publishes & follows (edge‑case safety)
   useScrollSync(leaderRef2);
@@ -180,4 +183,4 @@ If you find this library helpful and happen to know me personally, I accept spon
 
 ## 📜 License
 
-[MIT](LICENSE) © gilicaspi + contributors
+[MIT](./LICENSE) © gilicaspi + contributors
